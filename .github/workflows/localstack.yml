@@ -1,7 +1,7 @@
 name: localstack-e2e
 on: push
 jobs:
-  localstack-e2e:
+  e2e-localstack:
     runs-on: ubuntu-latest
     steps:
       # - name: Start LocalStack Pro (awslocal & tflocal)
@@ -19,3 +19,6 @@ jobs:
       - name: Initialize Terraform LocalStack
         run: ls
         # working-directory: terraform
+      - name: Clean temp directory
+        run: ls
+        working-directory: ../terraform
