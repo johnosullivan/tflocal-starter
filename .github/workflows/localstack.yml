@@ -6,7 +6,7 @@ jobs:
     steps:
       - name: Start LocalStack Pro (awslocal & tflocal)
         env:
-            LOCALSTACK_API_KEY: ${{ secrets.LOCALSTACK_API_KEY }}
+            LOCALSTACK_AUTH_TOKEN: ${{ secrets.LOCALSTACK_AUTH_TOKEN }}
         run: |
           pip install localstack awscli-local[ver1] # Install LocalStack & awslocal
           pip install terraform-local               # Install tflocal
