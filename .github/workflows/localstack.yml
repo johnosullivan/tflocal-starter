@@ -20,6 +20,10 @@ jobs:
       - name: Initialize Terraform LocalStack
         working-directory: ./terraform
         run: |
+            # Initialize TF
             tflocal init
+            # New Workspace Space
             tflocal workspace new e2e
             export TFWS=$(tflocal workspace show)
+            # Force Applied
+            tflocal apply -auto-approve
