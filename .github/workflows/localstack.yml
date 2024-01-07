@@ -27,10 +27,10 @@ jobs:
             export TFWS=$(tflocal workspace show)
             # Force Applied
             tflocal apply -auto-approve
+            echo ""
             # Retrieve USER_POOL_WALLET_ID
-            USER_POOL_WALLET_ID=$(awslocal cognito-idp list-user-pools --max-results 10 --output json | jq -c '.UserPools[] | select( .Name | contains("Web3AuthWalletLogin"))' | jq --raw-output -c '.Id')
+            export USER_POOL_WALLET_ID=$(awslocal cognito-idp list-user-pools --max-results 10 --output json | jq -c '.UserPools[] | select( .Name | contains("Web3AuthWalletLogin"))' | jq --raw-output -c '.Id')
             echo "Wallet User Pool: $USER_POOL_WALLET_ID"
             # Retrieve USER_POOL_CLIENT_ID
-            awslocal cognito-idp list-user-pool-clients --user-pool-id $USER_POOL_WALLET_ID --output json | jq
-            USER_POOL_CLIENT_ID=$(awslocal cognito-idp list-user-pool-clients --user-pool-id $USER_POOL_WALLET_ID --output json | jq -c '.UserPoolClients[] | select( .UserPoolId | contains(env.USER_POOL_WALLET_ID))' | jq --raw-output -c '.ClientId')
+            export USER_POOL_CLIENT_ID=$(awslocal cognito-idp list-user-pool-clients --user-pool-id $USER_POOL_WALLET_ID --output json | jq -c '.UserPoolClients[] | select( .UserPoolId | contains(env.USER_POOL_WALLET_ID))' | jq --raw-output -c '.ClientId')
             echo "Client ID: $USER_POOL_CLIENT_ID"
