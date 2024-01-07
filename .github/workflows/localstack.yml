@@ -17,10 +17,5 @@ jobs:
       #    localstack wait -t 30                     # to become ready before timing out
       #    echo "Startup complete"          
       - name: Initialize Terraform LocalStack Workspace
-        # working-directory: terraform
-        run: |
-          ls
-          tflocal init
-          tflocal workspace new e2e
-          export TFWS=$(tflocal workspace show)
-          echo $TFWS
+        run: ls
+        working-directory: terraform
