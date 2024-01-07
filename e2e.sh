@@ -23,7 +23,7 @@ APIS=$(awslocal apigateway get-rest-apis --query 'items' --output json)
 echo $APIS | jq
 # https://<api-id>.execute-api.localhost.localstack.cloud:4566/<stage-name>/
 
-HELLOWORLD_API_ID=$(echo $APIS | jq --raw-output -c '.[] | select(.name | contains("helloworld-default")) | .id')
+HELLOWORLD_API_ID=$(echo $APIS | jq --raw-output -c '.[] | select(.name | contains("helloworld-e2e")) | .id')
 HELLOWORLD_API_STAGE="prod"
 
 HELLOWORLD_URL=http://$HELLOWORLD_API_ID.execute-api.localhost.localstack.cloud:4566/$HELLOWORLD_API_STAGE

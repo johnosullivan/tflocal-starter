@@ -1,9 +1,9 @@
 volume/
-node_modules
-.terraform
+node_modules/
+.terraform/
+
 localstack_providers_override.tf
-builds
+builds/
 
-src/bin
-
+src/bin/*
 src/bin/helloworld/helloworld
