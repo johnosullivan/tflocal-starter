@@ -1,0 +1,9 @@
+{
+    "name": "@auth/postauth",
+    "version": "0.0.1",
+    "main": "index.js",
+    "dependencies": {
+        "@aws-sdk/client-eventbridge": "^3.316.0",
+        "@sentry/serverless": "^7.49.0"
+    }
+}

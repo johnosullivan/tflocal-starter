@@ -1,0 +1,9 @@
+{
+    "name": "@auth/verify",
+    "version": "0.0.1",
+    "main": "index.js",
+    "dependencies": {
+        "@sentry/serverless": "^7.28.1",
+        "ethers": "5.7.2"
+    }
+}

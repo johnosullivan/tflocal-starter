@@ -28,9 +28,25 @@ jobs:
             # Force Applied
             tflocal apply -auto-approve
             echo ""
+      - name: Retrieve Infrastructure Parameters
+        working-directory: ./terraform
+        run: |
             # Retrieve USER_POOL_WALLET_ID
             export USER_POOL_WALLET_ID=$(awslocal cognito-idp list-user-pools --max-results 10 --output json | jq -c '.UserPools[] | select( .Name | contains("Web3AuthWalletLogin"))' | jq --raw-output -c '.Id')
             echo "Wallet User Pool: $USER_POOL_WALLET_ID"
             # Retrieve USER_POOL_CLIENT_ID
             export USER_POOL_CLIENT_ID=$(awslocal cognito-idp list-user-pool-clients --user-pool-id $USER_POOL_WALLET_ID --output json | jq -c '.UserPoolClients[] | select( .UserPoolId | contains(env.USER_POOL_WALLET_ID))' | jq --raw-output -c '.ClientId')
             echo "Client ID: $USER_POOL_CLIENT_ID"
+            export WALLET_ADDRESS_ONE=0x073E61aa37A06d8121920d6cD743D97dd5Bb71a2
+            export USERNAME_ONE=wallet_$WALLET_ADDRESS_ONE
+            # create a new user for the e2e
+            awslocal cognito-idp admin-create-user \
+                --username $USERNAME_ONE \
+                --user-pool-id $USER_POOL_WALLET_ID
+            # force reset password for confirmed state
+            awslocal cognito-idp admin-set-user-password --user-pool-id $USER_POOL_WALLET_ID \
+                --username $USERNAME_ONE \
+                --password PaSsW0rD! --permanent
+            # list the users in the user pool (debug)
+            USERS=$(awslocal cognito-idp list-users --user-pool-id $USER_POOL_WALLET_ID --output json | jq -c '.Users')
+            echo $USERS | jq
