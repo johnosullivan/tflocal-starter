@@ -4,6 +4,7 @@ jobs:
   e2e-localstack:
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v2
       # - name: Start LocalStack Pro (awslocal & tflocal)
       #  env:
       #      LOCALSTACK_AUTH_TOKEN: ${{ secrets.LOCALSTACK_AUTH_TOKEN }}
