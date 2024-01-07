@@ -23,7 +23,7 @@ APIS=$(awslocal apigateway get-rest-apis --query 'items' --output json)
 echo $APIS | jq
 # https://<api-id>.execute-api.localhost.localstack.cloud:4566/<stage-name>/
 
-HELLOWORLD_API_ID=$(echo $APIS | jq --raw-output -c '.[] | select(.name | contains("helloworld-e2e")) | .id')
+HELLOWORLD_API_ID=$(echo $APIS | jq --raw-output -c '.[] | select(.name | contains("helloworld-default")) | .id')
 HELLOWORLD_API_STAGE="prod"
 
 HELLOWORLD_URL=http://$HELLOWORLD_API_ID.execute-api.localhost.localstack.cloud:4566/$HELLOWORLD_API_STAGE
@@ -38,5 +38,8 @@ USER_AUTH=$(awslocal cognito-idp initiate-auth \
 USER_ONE_TOKEN_RESULTS=$(echo $USER_AUTH | jq '.AuthenticationResult')
 USER_ONE_TOKEN=$(echo $USER_ONE_TOKEN_RESULTS | jq --raw-output '.IdToken')
 
+echo $USER_ONE_TOKEN
+
 HELLOWORLD_TEST_URL=$(echo $HELLOWORLD_URL/$USER_ONE_SUB)
+
 curl -i -H "X-Authorization: $USER_ONE_TOKEN" $HELLOWORLD_TEST_URL

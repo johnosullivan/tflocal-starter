@@ -4,4 +4,6 @@ node_modules
 localstack_providers_override.tf
 builds
 
+src/bin
+
 src/bin/helloworld/helloworld

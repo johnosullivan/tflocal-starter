@@ -18,14 +18,6 @@ func header() map[string]string {
 }
 
 func HandleRequest(ctx context.Context, request *events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
-	if request == nil {
-		return events.APIGatewayProxyResponse{
-			Body:            string("bytesResponse"),
-			StatusCode:      404,
-			Headers:         header(),
-			IsBase64Encoded: false,
-		}, errors.New("bad request")
-	}
 	log.Println("Hello World!", request)
 	var claimsMap map[string]interface{}
 	var ok bool
@@ -34,23 +26,16 @@ func HandleRequest(ctx context.Context, request *events.APIGatewayProxyRequest) 
 			StatusCode:      401,
 			Headers:         header(),
 			IsBase64Encoded: false,
-		}, errors.New("bad request")
+		}, errors.New("")
 	}
-	if sub, ok := claimsMap["sub"].(string); !ok {
-		message := fmt.Sprintf("Hello %s!", sub)
-		return events.APIGatewayProxyResponse{
-			Body:            message,
-			StatusCode:      200,
-			Headers:         header(),
-			IsBase64Encoded: false,
-		}, nil
-	} else {
-		return events.APIGatewayProxyResponse{
-			StatusCode:      404,
-			Headers:         header(),
-			IsBase64Encoded: false,
-		}, errors.New("bad request")
-	}
+
+	message := fmt.Sprintf("Hello %s!", claimsMap["sub"])
+	return events.APIGatewayProxyResponse{
+		Body:            message,
+		StatusCode:      200,
+		Headers:         header(),
+		IsBase64Encoded: false,
+	}, nil
 }
 
 func main() {
