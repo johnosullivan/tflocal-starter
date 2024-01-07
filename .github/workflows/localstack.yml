@@ -17,8 +17,6 @@ jobs:
       #    localstack wait -t 30                     # to become ready before timing out
       #    echo "Startup complete"          
       - name: Initialize Terraform LocalStack
-        run: ls
-        # working-directory: terraform
-      - name: Clean temp directory
-        run: ls
-        working-directory: ../terraform
+        working-directory: ./terraform
+        run: |
+            ls
