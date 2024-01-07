@@ -1,0 +1,5 @@
+volume/
+node_modules
+.terraform
+localstack_providers_override.tf
+builds

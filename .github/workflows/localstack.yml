@@ -5,6 +5,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+      - name: Build Sources
+        working-directory: ./src
+        run: |
+            make build
       - name: Start LocalStack Pro (awslocal & tflocal)
         env:
             LOCALSTACK_AUTH_TOKEN: ${{ secrets.LOCALSTACK_AUTH_TOKEN }}
@@ -18,6 +22,9 @@ jobs:
           localstack wait -t 30                     # to become ready before timing out
           echo "Startup complete"          
       - name: Initialize Terraform LocalStack
+        env:
+            LOCALSTACK_AUTH_TOKEN: ${{ secrets.LOCALSTACK_AUTH_TOKEN }}
+            TF_LOG: "ERROR"                         # Only LOG errors in the CI/CD
         working-directory: ./terraform
         run: |
             # Initialize TF
@@ -27,26 +34,7 @@ jobs:
             export TFWS=$(tflocal workspace show)
             # Force Applied
             tflocal apply -auto-approve
-            echo ""
-      - name: Retrieve Infrastructure Parameters
+      - name: Run e2e Tests
         working-directory: ./terraform
         run: |
-            # Retrieve USER_POOL_WALLET_ID
-            export USER_POOL_WALLET_ID=$(awslocal cognito-idp list-user-pools --max-results 10 --output json | jq -c '.UserPools[] | select( .Name | contains("Web3AuthWalletLogin"))' | jq --raw-output -c '.Id')
-            echo "Wallet User Pool: $USER_POOL_WALLET_ID"
-            # Retrieve USER_POOL_CLIENT_ID
-            export USER_POOL_CLIENT_ID=$(awslocal cognito-idp list-user-pool-clients --user-pool-id $USER_POOL_WALLET_ID --output json | jq -c '.UserPoolClients[] | select( .UserPoolId | contains(env.USER_POOL_WALLET_ID))' | jq --raw-output -c '.ClientId')
-            echo "Client ID: $USER_POOL_CLIENT_ID"
-            export WALLET_ADDRESS_ONE=0x073E61aa37A06d8121920d6cD743D97dd5Bb71a2
-            export USERNAME_ONE=wallet_$WALLET_ADDRESS_ONE
-            # create a new user for the e2e
-            awslocal cognito-idp admin-create-user \
-                --username $USERNAME_ONE \
-                --user-pool-id $USER_POOL_WALLET_ID
-            # force reset password for confirmed state
-            awslocal cognito-idp admin-set-user-password --user-pool-id $USER_POOL_WALLET_ID \
-                --username $USERNAME_ONE \
-                --password PaSsW0rD! --permanent
-            # list the users in the user pool (debug)
-            USERS=$(awslocal cognito-idp list-users --user-pool-id $USER_POOL_WALLET_ID --output json | jq -c '.Users')
-            echo $USERS | jq
+            ../e2e.sh
