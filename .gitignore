@@ -7,3 +7,5 @@ builds/
 
 src/bin/*
 src/bin/helloworld/helloworld
+
+.idea

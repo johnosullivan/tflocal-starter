@@ -24,5 +24,7 @@ tests:
 build:
 	@mkdir -p bin/helloworld/
 	GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -o bin/helloworld/helloworld helloworld/main.go
+	@mkdir -p bin/helloworld2/
+	GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -o bin/helloworld2/helloworld2 helloworld2/main.go
 	
 .PHONY:

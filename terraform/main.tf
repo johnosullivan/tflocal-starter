@@ -5,7 +5,7 @@ locals {
 ### Example Lambda Functions
 module "lambda-function-helloworld" {
   source  = "terraform-aws-modules/lambda/aws"
-  version = "6.5.0"
+  version = ">=6.5.0"
 
   function_name = "lambda-function-helloworld-${local.environment}"
 
@@ -29,10 +29,36 @@ module "lambda-function-helloworld" {
   memory_size = 256
 }
 
+module "lambda-function-helloworld-2" {
+  source  = "terraform-aws-modules/lambda/aws"
+  version = ">=6.5.0"
+
+  function_name = "lambda-function-helloworld-2-${local.environment}"
+
+  description = "helloworld2 example lambda function"
+  handler     = "helloworld2"
+  runtime     = "go1.x"
+
+  source_path = "../src/bin/helloworld2/helloworld2"
+
+  architectures = ["x86_64"]
+
+  tags = {
+    Name        = "lambda-function-helloworld-2-${local.environment}"
+    Environment = local.environment
+  }
+
+  attach_policies    = false
+  environment_variables = {}
+
+  timeout     = 60
+  memory_size = 256
+}
+
 // Lambda Presignup 
 module "lambda-function-auth-presignup" {
   source  = "terraform-aws-modules/lambda/aws"
-  version = "6.5.0"
+  version = ">=6.5.0"
 
   function_name = "lambda-function-auth-presignup-${local.environment}"
   description = "auth pre-signup lambda function"
@@ -58,7 +84,7 @@ module "lambda-function-auth-presignup" {
 // Lambda Post Auth
 module "lambda-function-auth-post" {
   source  = "terraform-aws-modules/lambda/aws"
-  version = "6.5.0"
+  version = ">=6.5.0"
 
   function_name = "lambda-function-auth-post-${local.environment}"
   description = "auth post lambda function"
@@ -85,7 +111,7 @@ module "lambda-function-auth-post" {
 // Lambda Define 
 module "lambda-function-auth-define" {
   source  = "terraform-aws-modules/lambda/aws"
-  version = "6.5.0"
+  version = ">=6.5.0"
 
   function_name = "lambda-function-auth-define-${local.environment}"
   description = "auth define lambda function"
@@ -111,7 +137,7 @@ module "lambda-function-auth-define" {
 // Lambda Create 
 module "lambda-function-auth-create" {
   source  = "terraform-aws-modules/lambda/aws"
-  version = "6.5.0"
+  version = ">=6.5.0"
 
   function_name = "lambda-function-auth-create-${local.environment}"
   description = "auth create lambda function"
@@ -137,7 +163,7 @@ module "lambda-function-auth-create" {
 // Lambda Verify 
 module "lambda-function-auth-verify" {
   source  = "terraform-aws-modules/lambda/aws"
-  version = "6.5.0"
+  version = ">=6.5.0"
 
   function_name = "lambda-function-auth-verify-${local.environment}"
   description = "auth verify lambda function"
